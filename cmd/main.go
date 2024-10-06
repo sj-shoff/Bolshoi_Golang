@@ -16,7 +16,7 @@ func main() {
 	s.Set("key2", "222")
 
 	res1 := s.Get("key2")
-	res2 := s.Get("key3")
+	kind := s.GetKind("key2")
 
-	fmt.Println(*res1, res2)
+	fmt.Println(*res1, kind)
 }

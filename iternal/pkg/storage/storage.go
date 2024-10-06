@@ -1,6 +1,8 @@
 package storage
 
 import (
+	"strconv"
+
 	"go.uber.org/zap"
 )
 
@@ -28,6 +30,7 @@ func (r Storage) Set(key, value string) {
 	r.logger.Info("key set")
 	r.logger.Sync()
 }
+
 func (r Storage) Get(key string) *string {
 	res, ok := r.inner[key]
 	if !ok {
@@ -38,4 +41,14 @@ func (r Storage) Get(key string) *string {
 	r.logger.Sync()
 
 	return &res
+}
+
+func (r Storage) GetKind(key string) string {
+	k := r.inner[key]
+	_, e := strconv.Atoi(k)
+	if e == nil {
+		return "D"
+	} else {
+		return "S"
+	}
 }
