@@ -1,9 +1,9 @@
-package projects
+package main
 
 import (
 	"fmt"
 )
 
 func main() {
-	fmt.Println("Я ХУЕЮ С ГО")
+	fmt.Println("Hello, wrld!")
 }
