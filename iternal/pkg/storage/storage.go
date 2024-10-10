@@ -6,8 +6,13 @@ import (
 	"go.uber.org/zap"
 )
 
+type Value struct {
+	v string
+	t Kind
+}
+
 type Storage struct {
-	inner  map[string]string
+	inner  map[string]Value
 	logger *zap.Logger
 }
 
@@ -16,39 +21,75 @@ func NewStorage() (Storage, error) {
 	if err != nil {
 		return Storage{}, err
 	}
+
 	defer logger.Sync()
+
 	logger.Info("created new storage")
 
 	return Storage{
-		inner:  make(map[string]string),
+		inner:  make(map[string]Value),
 		logger: logger,
 	}, nil
 }
 
 func (r Storage) Set(key, value string) {
-	r.inner[key] = value
-	r.logger.Info("key set")
+	switch kind := getType(value); kind {
+	case KindInt:
+		r.inner[key] = Value{v: value, t: kind}
+	case KindString:
+		r.inner[key] = Value{v: value, t: kind}
+	case KindUndefined:
+		r.logger.Error(
+			"undefined value type",
+			zap.String("key", key),
+			zap.Any("value", value),
+		)
+	}
+
+	r.logger.Info("key set", zap.Any("value", value))
 	r.logger.Sync()
 }
 
 func (r Storage) Get(key string) *string {
-	res, ok := r.inner[key]
+	res, ok := r.get(key)
 	if !ok {
 		return nil
 	}
 
-	r.logger.Info("key obtained", zap.String("key", key), zap.String("value", res))
-	r.logger.Sync()
-
-	return &res
+	return &res.v
 }
 
-func (r Storage) GetKind(key string) string {
-	k := r.inner[key]
-	_, e := strconv.Atoi(k)
-	if e == nil {
-		return "D"
-	} else {
-		return "S"
+func (r Storage) get(key string) (Value, bool) {
+	res, ok := r.inner[key]
+	if !ok {
+		return Value{}, false
+	}
+
+	return res, true
+}
+
+type Kind string
+
+const (
+	KindInt       Kind = "D"
+	KindString    Kind = "S"
+	KindUndefined Kind = "UN"
+)
+
+func getType(value string) Kind {
+	var val any
+
+	val, err := strconv.Atoi(value)
+	if err != nil {
+		val = value
+	}
+
+	switch val.(type) {
+	case int:
+		return KindInt
+	case string:
+		return KindString
+	default:
+		return KindUndefined
 	}
 }
