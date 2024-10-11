@@ -70,3 +70,31 @@ func TestSetGetWithType(t *testing.T) {
 		})
 	}
 }
+
+// func Test_MainPattern(t *testing.T) {
+// 	testData := map[string]any{
+// 		// Тестовые значения
+// 	}
+
+// 	expectedData := map[string]any{
+// 		// Ожидаемые значения
+// 	}
+
+// 	tests := []PatternTest{
+// 		{
+// 			name: "test name",
+// 			verifyResult: func(t *testing.T, p *PatternStruct, testName string) {
+// 				/*
+// 					Проверка результатов теста
+// 				*/
+// 			},
+// 		},
+// 	}
+
+// 	for _, test := range tests {
+// 		p := New()
+// 		t.Run(test.name, func(t *testing.T) {
+// 			test.verifyResult(t, p, test.name)
+// 		})
+// 	}
+// }
