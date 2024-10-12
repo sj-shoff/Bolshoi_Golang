@@ -59,15 +59,6 @@ func (r Storage) Get(key string) *string {
 	return &res.v
 }
 
-func (r Storage) get(key string) (Value, bool) {
-	res, ok := r.inner[key]
-	if !ok {
-		return Value{}, false
-	}
-
-	return res, true
-}
-
 type Kind string
 
 const (
