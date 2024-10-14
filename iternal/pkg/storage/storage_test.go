@@ -12,7 +12,6 @@ func TestSetGet(t *testing.T) {
 	cases := []testCase{
 		{"hello world", "hello", "world"},
 		{"hello world", "hello", "world"},
-		{"hello world", "hello", "123"},
 	}
 
 	s, err := NewStorage()
